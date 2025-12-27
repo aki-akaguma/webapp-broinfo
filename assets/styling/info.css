@@ -1,0 +1,28 @@
+/**/
+
+.info table {
+    --width: 100%;
+    border: 1px solid #d3d3d3;
+}
+.info th {
+    text-align: start;
+    background: #505860;
+    color: #fff;
+    font-style: normal;
+    font-weight: 400;
+    padding: 10px 10px;
+    border: 1px solid #d3d3d3;
+    line-height: 1.4;
+    white-space: nowrap;
+}
+.row1 {
+    background: #fbfbfb;
+    color: #5a5a5a;
+    padding: 0px 10px;
+}
+.row2 {
+    background: #e9e9e9;
+    color: #5a5a5a;
+    padding: 0px 10px;
+}
+/* vim: set ts=4 sw=4 sts=0 expandtab: ### mode line for vim */

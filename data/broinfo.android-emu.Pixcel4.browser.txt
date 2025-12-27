@@ -1,0 +1,10 @@
+{
+"cores":2,
+"dpr":2.75,
+"oscpu":"",
+"platform":"Linux armv81",
+"screen_color_depth":24,
+"screen_height":830,
+"screen_width":393,
+"user_agent":"Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Mobile Safari/537.36"
+}

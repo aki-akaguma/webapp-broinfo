@@ -1,0 +1,24 @@
+[jsinfo]
+oscpu = ""
+platform = "Linux x86_64"
+cpu_cores = 4
+cookie_enabled = true
+user_language = "ja"
+device_memory = 8
+screen_width = 1680
+screen_height = 1050
+screen_color_depth = 24
+device_pixcel_ratio = 1.0
+has_local_storage = true
+has_session_storage = true
+timezone = "Asia/Tokyo"
+
+[browser]
+name = "Chrome"
+version = "142.0.0.0"
+engine = "WebKit"
+
+[browser.os]
+name = "Linux"
+version = ""
+

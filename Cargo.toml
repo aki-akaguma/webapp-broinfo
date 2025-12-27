@@ -1,0 +1,83 @@
+[package]
+name = "broinfo"
+version = "0.1.3"
+authors = ["aki <aki.akaguma@hotmail.com>"]
+edition = "2021"
+description = """
+This is a webapp that provides browser information and hardware information.
+"""
+keywords = ["webapp"]
+categories = ["desktop", "android"]
+#license = "MIT OR Apache-2.0"
+readme = "README.md"
+build = "build.rs"
+rust-version = "1.90.0"
+repository = "https://github.com/aki-akaguma/webapp-broinfo"
+
+
+[package.metadata.patch]
+crates = ["dioxus-fullstack"]
+
+[patch.crates-io]
+dioxus-fullstack = { path = "./patched/dioxus-fullstack-0.7.2" }
+
+[dependencies]
+async-std = "1.13"
+console_error_panic_hook = "0.1"
+
+anyhow = "1.0"
+async-process = { version = "2.5", optional = true }
+
+dioxus = { version = "0.7.2", features = ["fullstack"] }
+dioxus-fullstack = "0.7.2"
+dioxus-desktop = { version = "0.7.2", optional = true }
+dioxus-logger = "0.7.2"
+
+serde = { version = "1.0", features = ["derive"] }
+
+const-css-minify = { version="1.0", optional = true }
+reqwest = { version = "0.12", features = ["json"], optional=true }
+
+#browserinfocm = { path = "../browserinfocm", default-features = false }
+#browserinfocm = { git = "https://github.com/aki-akaguma/browserinfocm.git" }
+browserinfocm = "0.1.7"
+
+[target.'cfg(target_os = "android")'.dependencies]
+openssl = { version = "0.10", features = ["vendored"] }
+
+[build-dependencies]
+rust-version-info-file = "0.2"
+
+
+[features]
+default = []
+
+web = ["dioxus/web", "browserinfocm/web"]
+desktop = ["dioxus/desktop", "browserinfocm/desktop", "dep:dioxus-desktop"]
+mobile = ["dioxus/mobile", "browserinfocm/mobile"]
+server = ["dioxus/server", "browserinfocm/server", "dep:async-process"]
+
+backend_next = ["browserinfocm/backend_next", "dep:reqwest"]
+backend_delay = ["browserinfocm/backend_delay"]
+backend_text = ["browserinfocm/backend_text"]
+debian_build = ["inline_style", "desktop"]
+inline_style = ["dep:const-css-minify"]
+
+
+[package.metadata.deb]
+features = ["debian_build"]
+section = "AAA-webapp"
+priority = "optional"
+maintainer = "aki <aki.akaguma@hotmail.com>"
+extended-description = """\
+This is a webapp that provides browser information and hardware information.
+"""
+depends = "$auto"
+separate-debug-symbols = true
+
+assets = [
+    ["target/release/broinfo", "usr/bin/broinfo", "755"],
+    ["target/rust-version-info.txt", "usr/share/doc/broinfo/", "644"],
+    ["README.md", "usr/share/doc/broinfo/", "644"],
+]
+

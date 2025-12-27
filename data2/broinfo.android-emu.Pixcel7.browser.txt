@@ -1,0 +1,23 @@
+[jsinfo]
+oscpu = ""
+platform = "Linux x86_64"
+cpu_cores = 2
+cookie_enabled = true
+user_language = "en-US"
+screen_width = 412
+screen_height = 915
+screen_color_depth = 24
+device_pixcel_ratio = 2.625
+has_local_storage = true
+has_session_storage = true
+timezone = "Asia/Tokyo"
+
+[browser]
+name = "Chrome"
+version = "109.0.0.0"
+engine = "WebKit"
+
+[browser.os]
+name = "Android"
+version = "13"
+
