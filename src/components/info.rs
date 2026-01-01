@@ -23,7 +23,10 @@ pub fn Info() -> Element {
     // browser info
     let broinfo_sig = use_signal(BroInfo::default);
     let browser_sig = use_signal(Browser::default);
+    let bicmid_sig = use_signal(String::new);
     let user_sig = use_signal(String::new);
+
+    let bicmid_s = bicmid_sig.read().clone();
 
     let brg = browser_sig.read().clone();
     let browser_s = if !brg.name.is_empty() && !brg.version.is_empty() {
@@ -90,7 +93,7 @@ pub fn Info() -> Element {
     };
 
     rsx! {
-        BrowserInfoCm { broinfo: broinfo_sig, browser: browser_sig, user: user_sig }
+        BrowserInfoCm { broinfo: broinfo_sig, browser: browser_sig, bicmid: bicmid_sig, user: user_sig }
         document::Link { rel: "stylesheet", href: INFO_CSS }
 
         div { class: "info",
@@ -205,6 +208,16 @@ pub fn Info() -> Element {
                 tr {
                     th { "OS" }
                     td { class: "row2", "{os_s}" }
+                }
+            }
+        }
+        br {}
+        div { class: "info",
+            h3 { "Bicm Information" }
+            table {
+                tr {
+                    th { "BicmID" }
+                    td { class: "row1", "{bicmid_s}" }
                 }
             }
         }
