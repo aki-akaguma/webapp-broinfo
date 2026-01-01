@@ -583,8 +583,9 @@ dependencies = [
 
 [[package]]
 name = "browserinfocm"
-version = "0.1.7"
-source = "git+https://github.com/aki-akaguma/browserinfocm.git#184ecd747153473721936cad9a8ceccc8e782e2a"
+version = "0.1.9"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "16fc72029577416b834a47303ddf03996c1cc1dd7f8cbf2749bf549687a6222e"
 dependencies = [
  "anyhow",
  "async-std",
