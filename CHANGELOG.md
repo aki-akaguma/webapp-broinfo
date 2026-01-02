@@ -10,7 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 * `bicmid`
 
 ### Changed
-* updated crate: browserinfocm(0.1.9)
+* updated crate: browserinfocm(0.1.10)
 * rename the repository name: `broinfo` to `webapp-broinfo`
 
 

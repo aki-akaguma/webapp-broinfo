@@ -18,5 +18,5 @@ bundle-desktop:
 #	dx bundle --desktop --release --features backend_next
 
 bundle-android:
-	dx bundle --android --release
+	dx bundle --android --release --target=aarch64-linux-android
 

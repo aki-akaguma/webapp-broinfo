@@ -29,7 +29,7 @@ dioxus-logger = "0.7.2"
 
 #browserinfocm = { path = "../browserinfocm", default-features = false }
 #browserinfocm = { git = "https://github.com/aki-akaguma/browserinfocm.git" }
-browserinfocm = "0.1.9"
+browserinfocm = "0.1.10"
 
 anyhow = "1.0"
 async-std = "1.13"
