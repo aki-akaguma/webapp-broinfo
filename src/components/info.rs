@@ -4,6 +4,7 @@ use dioxus::prelude::*;
 
 const INFO_CSS: Asset = asset!("/assets/styling/info.css");
 
+/// the component of browser information
 #[component]
 pub fn Info() -> Element {
     use crate::backends::AddrInfo;
@@ -11,9 +12,9 @@ pub fn Info() -> Element {
     // host info
     let mut addrinfo_sig = use_signal(AddrInfo::default);
     use_future(move || async move {
-        //let s = dioxus::fullstack::get_server_url().to_string();
-        //info!("server url: '{s}'");
-        let s = crate::backends::get_address_info().await.unwrap();
+        let s = crate::backends::get_address_info("x".to_string())
+            .await
+            .unwrap();
         addrinfo_sig.set(s);
     });
     let a = addrinfo_sig.read().clone();
@@ -93,7 +94,12 @@ pub fn Info() -> Element {
     };
 
     rsx! {
-        BrowserInfoCm { broinfo: broinfo_sig, browser: browser_sig, bicmid: bicmid_sig, user: user_sig }
+        BrowserInfoCm {
+            broinfo: broinfo_sig,
+            browser: browser_sig,
+            bicmid: bicmid_sig,
+            user: user_sig,
+        }
         document::Link { rel: "stylesheet", href: INFO_CSS }
 
         div { class: "info",

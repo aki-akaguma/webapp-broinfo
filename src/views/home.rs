@@ -1,6 +1,7 @@
 use crate::components::Info;
 use dioxus::prelude::*;
 
+/// the component of the `home page`
 #[component]
 pub fn Home() -> Element {
     let pkg_version = env!("CARGO_PKG_VERSION");
