@@ -1,6 +1,6 @@
 [package]
 name = "broinfo"
-version = "0.1.5"
+version = "0.1.6"
 authors = ["aki <aki.akaguma@hotmail.com>"]
 edition = "2021"
 description = """
@@ -29,7 +29,7 @@ dioxus-logger = "0.7.2"
 
 #browserinfocm = { path = "../browserinfocm", default-features = false }
 #browserinfocm = { git = "https://github.com/aki-akaguma/browserinfocm.git" }
-browserinfocm = "0.1.10"
+browserinfocm = "0.1.11"
 
 anyhow = "1.0"
 async-std = "1.13"

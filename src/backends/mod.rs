@@ -17,7 +17,7 @@ pub struct AddrInfo {
 /// get ip address information
 #[post("/api/v1/nasi1", headers: dioxus::fullstack::HeaderMap)]
 pub async fn get_address_info(_x: String) -> Result<AddrInfo> {
-    let ip = browserinfocm::get_ipaddress_string(&headers);
+    let ip = browserinfocm::get_ip_address_string(&headers);
     let host = if ip.is_empty() {
         "".to_string()
     } else {
