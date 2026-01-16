@@ -32,7 +32,6 @@ dioxus-logger = "0.7.2"
 browserinfocm = "0.1.11"
 
 anyhow = "1.0"
-async-std = "1.13"
 console_error_panic_hook = "0.1"
 serde = { version = "1.0", features = ["derive"] }
 

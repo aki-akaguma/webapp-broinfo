@@ -1,5 +1,9 @@
 [application]
 
+name = "broinfo"
+out_dir = "dist"
+asset_dir = "public"
+
 [web.app]
 
 # HTML title tag content
@@ -21,5 +25,15 @@ script = []
 script = []
 
 [bundle]
-identifier = "org.omusubi.aki"
+identifier = "org.omusubi.aki.broinfo"
 publisher = "aki.akaguma"
+
+icon = [
+  # "icons/icon.ico"
+  "assets/favicon.ico"
+]
+
+copyright = "iCopyright 2026 aki.akaguma"
+category = "Utility"
+short_description = "Browser Information"
+long_description = "Browser Information"
