@@ -10,6 +10,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 * `out_dir` into `Disoxus.toml`
 * android icon
 
+### Changed
+* update crate: browserinfocm(0.1.12),dioxus(0.7.3)
+
 
 ## [0.1.6] (2026-01-13)
 ### Changed

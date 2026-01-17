@@ -19,17 +19,17 @@ repository = "https://github.com/aki-akaguma/webapp-broinfo"
 crates = ["dioxus-fullstack"]
 
 [patch.crates-io]
-dioxus-fullstack = { path = "./patched/dioxus-fullstack-0.7.2" }
+dioxus-fullstack = { path = "./patched/dioxus-fullstack-0.7.3" }
 
 [dependencies]
-dioxus = { version = "0.7.2", features = ["fullstack"] }
-dioxus-fullstack = "0.7.2"
-dioxus-desktop = { version = "0.7.2", optional = true }
-dioxus-logger = "0.7.2"
+dioxus = { version = "0.7.3", features = ["fullstack"] }
+dioxus-fullstack = "0.7.3"
+dioxus-desktop = { version = "0.7.3", optional = true }
+dioxus-logger = "0.7.3"
 
 #browserinfocm = { path = "../browserinfocm", default-features = false }
 #browserinfocm = { git = "https://github.com/aki-akaguma/browserinfocm.git" }
-browserinfocm = "0.1.11"
+browserinfocm = "0.1.12"
 
 anyhow = "1.0"
 console_error_panic_hook = "0.1"
