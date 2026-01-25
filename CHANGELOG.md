@@ -7,8 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 ### Added
-*  android webview assets support
-*  android webview support
+* android webview assets support
+* android webview support
+
+### Changed
+* identifier = "org.omusubi.aki.nt.broinfo"
 
 
 ## [0.1.8] (2026-01-19)
