@@ -36,3 +36,7 @@ bundle-android-x86_64:
 bundle-android-wv:
 	@rm -fr "target/dx"
 	./scripts/wv-apk-icon-assemble-r.sh broinfo resources/android ./scripts/android-webview-params.toml
+
+bundle-android-wva:
+	@rm -fr "target/dx"
+	./scripts/wva-apk-icon-assemble-r.sh broinfo resources/android resources/android ./scripts/android-webview-assets-params.toml
