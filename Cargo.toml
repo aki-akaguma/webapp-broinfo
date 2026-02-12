@@ -29,7 +29,7 @@ dioxus-logger = "0.7.3"
 
 #browserinfocm = { path = "../browserinfocm", default-features = false }
 #browserinfocm = { git = "https://github.com/aki-akaguma/browserinfocm.git" }
-browserinfocm = "0.1.13"
+browserinfocm = "0.1.14"
 
 anyhow = "1.0"
 console_error_panic_hook = "0.1"
