@@ -6,9 +6,11 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+
+
+## [0.1.10] (2026-02-12)
 ### Fixed
 * unreachable code after return statement: added all around `{}` on javascript
-
 
 ## [0.1.9] (2026-02-08)
 ### Added
@@ -95,7 +97,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 * first commit
 
-[Unreleased]: https://github.com/aki-akaguma/broinfo/compare/v0.1.8..HEAD
+[Unreleased]: https://github.com/aki-akaguma/broinfo/compare/v0.1.10..HEAD
+[0.1.10]: https://github.com/aki-akaguma/broinfo/compare/v0.1.9..v0.1.10
+[0.1.9]: https://github.com/aki-akaguma/broinfo/compare/v0.1.8..v0.1.9
 [0.1.8]: https://github.com/aki-akaguma/broinfo/compare/v0.1.7..v0.1.8
 [0.1.7]: https://github.com/aki-akaguma/broinfo/compare/v0.1.6..v0.1.7
 [0.1.6]: https://github.com/aki-akaguma/broinfo/compare/v0.1.5..v0.1.6
