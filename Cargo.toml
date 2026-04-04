@@ -19,17 +19,17 @@ repository = "https://github.com/aki-akaguma/webapp-broinfo"
 crates = ["dioxus-fullstack"]
 
 [patch.crates-io]
-dioxus-fullstack = { path = "./patched/dioxus-fullstack-0.7.3" }
+dioxus-fullstack = { path = "./patched/dioxus-fullstack-0.7.4" }
 
 [dependencies]
-dioxus = { version = "0.7.3", features = ["fullstack"] }
-dioxus-fullstack = "0.7.3"
-dioxus-desktop = { version = "0.7.3", optional = true }
-dioxus-logger = "0.7.3"
+dioxus = { version = "0.7.4", features = ["fullstack"] }
+dioxus-fullstack = "0.7.4"
+dioxus-desktop = { version = "0.7.4", optional = true }
+dioxus-logger = "0.7.4"
 
 #browserinfocm = { path = "../browserinfocm", default-features = false }
 #browserinfocm = { git = "https://github.com/aki-akaguma/browserinfocm.git" }
-browserinfocm = "0.1.14"
+browserinfocm = "0.1.15"
 
 anyhow = "1.0"
 console_error_panic_hook = "0.1"
@@ -37,7 +37,9 @@ serde = { version = "1.0", features = ["derive"] }
 
 async-process = { version = "2.5", optional = true }
 const-css-minify = { version="1.0", optional = true }
-reqwest = { version = "0.12", features = ["json"], optional=true }
+
+# depend on dioxus
+reqwest = { version = "0.12", default-features = false, features = ["json"], optional = true }
 
 [target.'cfg(target_os = "android")'.dependencies]
 openssl = { version = "0.10", features = ["vendored"] }
