@@ -1,6 +1,6 @@
 [package]
 name = "broinfo"
-version = "0.1.10"
+version = "0.1.11"
 authors = ["aki <aki.akaguma@hotmail.com>"]
 edition = "2021"
 description = """
@@ -80,3 +80,7 @@ assets = [
     ["README.md", "usr/share/doc/broinfo/", "644"],
 ]
 
+[profile.release]
+strip = "debuginfo"
+opt-level = "s"
+lto = true

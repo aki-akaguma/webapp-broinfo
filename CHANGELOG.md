@@ -6,12 +6,15 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+
+
+## [0.1.11] (2026-04-05)
 ### Changed
+* profile.release: opt-level = "s"
 * updated crates: dioxus(0.7.4), browserinfocm(0.1.15)
 
 ### Fixed
 * android wva
-
 
 ## [0.1.10] (2026-02-12)
 ### Fixed
@@ -102,7 +105,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 * first commit
 
-[Unreleased]: https://github.com/aki-akaguma/broinfo/compare/v0.1.10..HEAD
+[Unreleased]: https://github.com/aki-akaguma/broinfo/compare/v0.1.11..HEAD
+[0.1.11]: https://github.com/aki-akaguma/broinfo/compare/v0.1.10..v0.1.11
 [0.1.10]: https://github.com/aki-akaguma/broinfo/compare/v0.1.9..v0.1.10
 [0.1.9]: https://github.com/aki-akaguma/broinfo/compare/v0.1.8..v0.1.9
 [0.1.8]: https://github.com/aki-akaguma/broinfo/compare/v0.1.7..v0.1.8
