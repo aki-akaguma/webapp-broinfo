@@ -77,7 +77,7 @@ pub fn Info() -> Element {
     } else {
         String::new()
     };
-    let dpr = if let Some(d) = bim.jsinfo.device_pixcel_ratio {
+    let dpr = if let Some(d) = bim.jsinfo.device_pixel_ratio {
         format!("{d:.2}")
     } else {
         String::new()
