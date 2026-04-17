@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 ### Changed
+* robust error handling: in `info.rs`, `use_future`
+* `command_host()` param: the ip is validated
+* refactoring: UI code in `info.rs`
+* resolving in `command_host()`
 * updated crates: browserinfocm(0.1.17)
 
 ### Fixed

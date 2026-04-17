@@ -2,9 +2,6 @@ use anyhow::Result;
 use dioxus::prelude::*;
 use serde::{Deserialize, Serialize};
 
-#[cfg(feature = "server")]
-use async_process::Command;
-
 /// This is ip address information from `x-forwarded-for`
 #[derive(Serialize, Deserialize, Debug, Default, Clone, PartialEq)]
 pub struct AddrInfo {
@@ -29,25 +26,28 @@ pub async fn get_address_info(_x: String) -> Result<AddrInfo> {
 /// invoke host command
 #[cfg(feature = "server")]
 async fn command_host(ip: &str) -> Result<String> {
-    let out = Command::new("host").arg(&ip).output().await?;
-    let r = if out.status.success() {
-        let s = String::from_utf8_lossy(&out.stdout).to_string();
-        let ss = s.as_str();
-        // 154.116.168.192.in-addr.arpa domain name pointer aki-dst2.
-        // 154.116.168.192.in-addr.arpa domain name pointer aki-dst2.local.
-        let pat_s = " domain name pointer ";
-        if let Some(idx) = ss.rfind(pat_s) {
-            let sss = &ss[idx + pat_s.len()..].trim();
-            if let Some(ssss) = sss.strip_suffix(".") {
-                ssss.to_string()
-            } else {
-                sss.to_string()
-            }
-        } else {
-            "".to_string()
+    use hickory_resolver::proto::rr::RData;
+
+    // 1. Check if it is correct as an IP address
+    let ip_addr: std::net::IpAddr = ip.parse()?;
+
+    // 2. Create a resolver using system default settings
+    let resolver = hickory_resolver::Resolver::builder_tokio()?.build()?;
+
+    // 3. Perform a reverse DNS lookup
+    match resolver.reverse_lookup(ip_addr).await {
+        Ok(lookup) => {
+            let host = lookup
+                .answers()
+                .iter()
+                .next()
+                .map(|rec| match &rec.data {
+                    RData::PTR(ptr) => ptr.to_utf8().trim_end_matches('.').to_string(),
+                    _ => String::new(),
+                })
+                .unwrap_or_default();
+            Ok(host)
         }
-    } else {
-        "".to_string()
-    };
-    Ok(r)
+        Err(_) => Ok(String::new()),
+    }
 }

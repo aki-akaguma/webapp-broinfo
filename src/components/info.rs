@@ -1,5 +1,6 @@
 use browserinfocm::browserinfo::{BroInfo, Browser};
 use browserinfocm::BrowserInfoCm;
+use dioxus::logger::tracing;
 use dioxus::prelude::*;
 
 const INFO_CSS: Asset = asset!("/assets/styling/info.css");
@@ -10,16 +11,38 @@ pub fn Info() -> Element {
     use crate::backends::AddrInfo;
 
     // host info
-    let mut addrinfo_sig = use_signal(AddrInfo::default);
+    let mut addrinfo_sig = use_signal(|| None::<AddrInfo>);
+    let mut error_msg = use_signal(String::new);
     use_future(move || async move {
-        let s = crate::backends::get_address_info("x".to_string())
-            .await
-            .unwrap();
-        addrinfo_sig.set(s);
+        match crate::backends::get_address_info("x".to_string()).await {
+            Ok(s) => addrinfo_sig.set(Some(s)),
+            Err(e) => {
+                tracing::error!("Failed to get address info: {e}");
+                error_msg.set(format!("Error: {e}"));
+            }
+        }
     });
-    let a = addrinfo_sig.read().clone();
-    let addrinfo_ip_s = a.ip;
-    let addrinfo_host_s = a.host;
+
+    let addrinfo_content = match &*addrinfo_sig.read() {
+        Some(a) => rsx! {
+            table {
+                tr {
+                    th { "IP" }
+                    td { class: "row1", "{a.ip}" }
+                }
+                tr {
+                    th { "Host" }
+                    td { class: "row2", "{a.host}" }
+                }
+            }
+        },
+        None if !error_msg.read().is_empty() => rsx! {
+            p { class: "error", "{error_msg}" }
+        },
+        None => rsx! {
+            p { "Loading address information..." }
+        },
+    };
 
     // browser info
     let broinfo_sig = use_signal(BroInfo::default);
@@ -30,24 +53,9 @@ pub fn Info() -> Element {
     let bicmid_s = bicmid_sig.read().clone();
 
     let brg = browser_sig.read().clone();
-    let browser_s = if !brg.name.is_empty() && !brg.version.is_empty() {
-        format!("{} (ver. {})", brg.name, brg.version)
-    } else if !brg.name.is_empty() {
-        brg.name.to_string()
-    } else {
-        String::new()
-    };
-    let os_s = if let Some(o) = brg.os {
-        if !o.name.is_empty() && !o.version.is_empty() {
-            format!("{} {}", o.name, o.version)
-        } else if !o.name.is_empty() {
-            o.name.to_string()
-        } else {
-            String::new()
-        }
-    } else {
-        String::new()
-    };
+    let browser_s = format_name_version(&brg.name, &brg.version);
+    let os_s = format_os(brg.os.clone());
+
     let device_s = if !brg.device.is_empty() {
         brg.device.to_string()
     } else {
@@ -104,128 +112,87 @@ pub fn Info() -> Element {
 
         div { class: "info",
             h3 { "Ip Address Information" }
-            table {
-                tr {
-                    th { "IP" }
-                    td { class: "row1", "{addrinfo_ip_s}" }
-                }
-                tr {
-                    th { "Host" }
-                    td { class: "row2", "{addrinfo_host_s}" }
-                }
-            }
+            {addrinfo_content}
         }
         br {}
         div { class: "info",
             h3 { "Browser Information" }
             table {
-                tr {
-                    th { "Browser" }
-                    td { class: "row1", "{browser_s}" }
+                InfoRow { label: "Browser", value: browser_s, is_alt: false }
+                InfoRow { label: "Language", value: lang, is_alt: true }
+                InfoRow {
+                    label: "Cookie",
+                    value: if has_cookie { "Enable" } else { "Disable" },
+                    is_alt: false,
                 }
-                tr {
-                    th { "Language" }
-                    td { class: "row2", "{lang}" }
+                InfoRow {
+                    label: "Session Storage",
+                    value: if has_session_storage { "Enable" } else { "Disable" },
+                    is_alt: true,
                 }
-                tr {
-                    th { "Cookie" }
-                    td { class: "row2",
-                        if has_cookie {
-                            "Enable"
-                        } else {
-                            "Disable"
-                        }
-                    }
+                InfoRow {
+                    label: "Local Storage",
+                    value: if has_local_storage { "Enable" } else { "Disable" },
+                    is_alt: false,
                 }
-                tr {
-                    th { "Session Storage" }
-                    td { class: "row1",
-                        if has_session_storage {
-                            "Enable"
-                        } else {
-                            "Disable"
-                        }
-                    }
+                InfoRow {
+                    label: "Dark Mode",
+                    value: if is_dark_mode { "Enable" } else { "Disable" },
+                    is_alt: true,
                 }
-                tr {
-                    th { "Local Storage" }
-                    td { class: "row2",
-                        if has_local_storage {
-                            "Enable"
-                        } else {
-                            "Disable"
-                        }
-                    }
-                }
-                tr {
-                    th { "Dark Mode" }
-                    td { class: "row1",
-                        if is_dark_mode {
-                            "Enable"
-                        } else {
-                            "Disable"
-                        }
-                    }
-                }
-                tr {
-                    th { "Timezone" }
-                    td { class: "row2", "{timezone}" }
-                }
-                tr {
-                    th { "User Agent" }
-                    td { class: "row1", "{ua}" }
-                }
+                InfoRow { label: "Timezone", value: timezone, is_alt: false }
+                InfoRow { label: "User Agent", value: ua, is_alt: true }
             }
         }
         br {}
         div { class: "info",
             h3 { "Hardware Information" }
             table {
-                tr {
-                    th { "CPU Cores" }
-                    td { class: "row1", "{cores}" }
-                }
-                tr {
-                    th { "Screen Size" }
-                    td { class: "row2", "{screen_size}" }
-                }
-                tr {
-                    th { "DPR" }
-                    td { class: "row1", "{dpr}" }
-                }
-                tr {
-                    th { "Color Depth" }
-                    td { class: "row2", "{color_depth}" }
-                }
-                tr {
-                    th { "Memory" }
-                    td { class: "row1", "{device_memory}" }
-                }
+                InfoRow { label: "CPU Cores", value: cores, is_alt: true }
+                InfoRow { label: "Screen Size", value: screen_size, is_alt: false }
+                InfoRow { label: "DPR", value: dpr, is_alt: true }
+                InfoRow { label: "Color Depth", value: color_depth, is_alt: false }
+                InfoRow { label: "Memory", value: device_memory, is_alt: true }
             }
         }
         br {}
         div { class: "info",
             h3 { "Device Information" }
             table {
-                tr {
-                    th { "Device" }
-                    td { class: "row1", "{device_s}" }
-                }
-                tr {
-                    th { "OS" }
-                    td { class: "row2", "{os_s}" }
-                }
+                InfoRow { label: "Device", value: device_s, is_alt: true }
+                InfoRow { label: "OS", value: os_s, is_alt: false }
             }
         }
         br {}
         div { class: "info",
             h3 { "Bicm Information" }
             table {
-                tr {
-                    th { "BicmID" }
-                    td { class: "row1", "{bicmid_s}" }
-                }
+                InfoRow { label: "BicmID", value: bicmid_s, is_alt: true }
             }
         }
+    }
+}
+
+#[component]
+fn InfoRow(label: String, value: String, is_alt: bool) -> Element {
+    let class = if is_alt { "row2" } else { "row1" };
+    rsx! {
+        tr {
+            th { "{label}" }
+            td { class: "{class}", "{value}" }
+        }
+    }
+}
+
+fn format_os(os: Option<browserinfocm::browserinfo::Os>) -> String {
+    os.map(|o| format_name_version(&o.name, &o.version))
+        .unwrap_or_default()
+}
+
+fn format_name_version(name: &str, version: &str) -> String {
+    match (name.is_empty(), version.is_empty()) {
+        (false, false) => format!("{} {}", name, version),
+        (false, true) => name.to_string(),
+        _ => String::new(),
     }
 }
