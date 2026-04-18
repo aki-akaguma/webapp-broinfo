@@ -19,10 +19,10 @@ fn main() {
 
     // Initialize the logger with appropriate levels based on build type.
     #[cfg(not(debug_assertions))]
-    let level = dioxus_logger::tracing::Level::INFO;
+    let level = dioxus::logger::tracing::Level::INFO;
     #[cfg(debug_assertions)]
-    let level = dioxus_logger::tracing::Level::DEBUG;
-    dioxus_logger::init(level).expect("failed to init logger");
+    let level = dioxus::logger::tracing::Level::DEBUG;
+    dioxus::logger::init(level).expect("failed to init logger");
 
     // Connect Desktop/Mobile release builds to the public backend API.
     #[cfg(not(debug_assertions))]

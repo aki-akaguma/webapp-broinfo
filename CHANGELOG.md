@@ -1,4 +1,4 @@
-# Changelog: broinfo
+# Changelog: webapp-broinfo
 
 All notable changes to this project will be documented in this file.
 
@@ -6,6 +6,9 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+
+
+## [0.1.13] (2026-04-18)
 ### Changed
 * consolidate signals: in `src/components/info.rs`
 * robust error handling: in `info.rs`, `use_future`
@@ -16,7 +19,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 * `dx bundle --desktop --release --package-types appimage` on `Makefile`
-
 
 ## [0.1.12] (2026-04-11)
 ### Changed
@@ -119,17 +121,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 * first commit
 
-[Unreleased]: https://github.com/aki-akaguma/broinfo/compare/v0.1.12..HEAD
-[0.1.12]: https://github.com/aki-akaguma/broinfo/compare/v0.1.11..v0.1.12
-[0.1.11]: https://github.com/aki-akaguma/broinfo/compare/v0.1.10..v0.1.11
-[0.1.10]: https://github.com/aki-akaguma/broinfo/compare/v0.1.9..v0.1.10
-[0.1.9]: https://github.com/aki-akaguma/broinfo/compare/v0.1.8..v0.1.9
-[0.1.8]: https://github.com/aki-akaguma/broinfo/compare/v0.1.7..v0.1.8
-[0.1.7]: https://github.com/aki-akaguma/broinfo/compare/v0.1.6..v0.1.7
-[0.1.6]: https://github.com/aki-akaguma/broinfo/compare/v0.1.5..v0.1.6
-[0.1.5]: https://github.com/aki-akaguma/broinfo/compare/v0.1.4..v0.1.5
-[0.1.4]: https://github.com/aki-akaguma/broinfo/compare/v0.1.3..v0.1.4
-[0.1.3]: https://github.com/aki-akaguma/broinfo/compare/v0.1.2..v0.1.3
-[0.1.2]: https://github.com/aki-akaguma/broinfo/compare/v0.1.1..v0.1.2
-[0.1.1]: https://github.com/aki-akaguma/broinfo/compare/v0.1.0..v0.1.1
-[0.1.0]: https://github.com/aki-akaguma/broinfo/releases/tag/v0.1.0
+[Unreleased]: https://github.com/aki-akaguma/webapp-broinfo/compare/v0.1.13..HEAD
+[0.1.13]: https://github.com/aki-akaguma/webapp-broinfo/compare/v0.1.12..v0.1.13
+[0.1.12]: https://github.com/aki-akaguma/webapp-broinfo/compare/v0.1.11..v0.1.12
+[0.1.11]: https://github.com/aki-akaguma/webapp-broinfo/compare/v0.1.10..v0.1.11
+[0.1.10]: https://github.com/aki-akaguma/webapp-broinfo/compare/v0.1.9..v0.1.10
+[0.1.9]: https://github.com/aki-akaguma/webapp-broinfo/compare/v0.1.8..v0.1.9
+[0.1.8]: https://github.com/aki-akaguma/webapp-broinfo/compare/v0.1.7..v0.1.8
+[0.1.7]: https://github.com/aki-akaguma/webapp-broinfo/compare/v0.1.6..v0.1.7
+[0.1.6]: https://github.com/aki-akaguma/webapp-broinfo/compare/v0.1.5..v0.1.6
+[0.1.5]: https://github.com/aki-akaguma/webapp-broinfo/compare/v0.1.4..v0.1.5
+[0.1.4]: https://github.com/aki-akaguma/webapp-broinfo/compare/v0.1.3..v0.1.4
+[0.1.3]: https://github.com/aki-akaguma/webapp-broinfo/compare/v0.1.2..v0.1.3
+[0.1.2]: https://github.com/aki-akaguma/webapp-broinfo/compare/v0.1.1..v0.1.2
+[0.1.1]: https://github.com/aki-akaguma/webapp-broinfo/compare/v0.1.0..v0.1.1
+[0.1.0]: https://github.com/aki-akaguma/webapp-broinfo/releases/tag/v0.1.0

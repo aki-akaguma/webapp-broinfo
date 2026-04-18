@@ -1,6 +1,6 @@
 [package]
 name = "broinfo"
-version = "0.1.12"
+version = "0.1.13"
 authors = ["aki <aki.akaguma@hotmail.com>"]
 edition = "2021"
 description = """
@@ -23,9 +23,7 @@ dioxus-fullstack = { path = "./patched/dioxus-fullstack-0.7.5" }
 
 [dependencies]
 dioxus = { version = "0.7.5", features = ["fullstack"] }
-dioxus-fullstack = "0.7.5"
 dioxus-desktop = { version = "0.7.5", optional = true }
-dioxus-logger = "0.7.4"
 
 #browserinfocm = { path = "../browserinfocm", default-features = false }
 #browserinfocm = { git = "https://github.com/aki-akaguma/browserinfocm.git" }
@@ -33,15 +31,16 @@ browserinfocm = "0.1.17"
 
 anyhow = "1.0"
 console_error_panic_hook = "0.1"
-serde = { version = "1.0", features = ["derive"] }
 
 async-process = { version = "2.5", optional = true }
 const-css-minify = { version="1.0", optional = true }
 hickory-resolver = { version = "0.26", optional = true }
 
 # depend on dioxus
+serde = { version = "1.0", features = ["derive"] }
+
+# depend on dioxus, optional
 reqwest = { version = "0.12", default-features = false, features = ["json"], optional = true }
-#tokio = { version = "1.52", features = ["net"], optional = true }
 tracing = { version = "0.1", optional = true }
 
 [target.'cfg(target_os = "android")'.dependencies]
@@ -57,7 +56,8 @@ default = []
 web = ["dioxus/web", "browserinfocm/web"]
 desktop = ["dioxus/desktop", "browserinfocm/desktop", "dep:dioxus-desktop"]
 mobile = ["dioxus/mobile", "browserinfocm/mobile"]
-server = ["dioxus/server", "browserinfocm/server", "dep:async-process", "dep:hickory-resolver", "dep:tracing"]
+server = ["dioxus/server", "browserinfocm/server",
+    "dep:async-process", "dep:hickory-resolver", "dep:tracing"]
 
 backend_next = ["browserinfocm/backend_next", "dep:reqwest"]
 backend_delay = ["browserinfocm/backend_delay"]
