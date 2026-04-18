@@ -2,19 +2,28 @@ use anyhow::Result;
 use dioxus::prelude::*;
 use serde::{Deserialize, Serialize};
 
-/// This is ip address information from `x-forwarded-for`
+/// Represents information about the client's network connection.
 #[derive(Serialize, Deserialize, Debug, Default, Clone, PartialEq)]
 pub struct AddrInfo {
-    /// ip address: ipv4 or ipv6
+    /// The IPv4 or IPv6 address of the client.
     pub ip: String,
-    /// host name obtained as a result of executing host command
+    /// The hostname obtained via reverse DNS lookup.
     pub host: String,
 }
 
-/// get ip address information
+/// Server function to retrieve the client's IP address and hostname.
+///
+/// This function extracts the IP from request headers and performs
+/// a reverse DNS lookup. It uses tracing to log request context.
 #[post("/api/v1/nasi1", headers: dioxus::fullstack::HeaderMap)]
+#[tracing::instrument(skip(headers), fields(ip))]
 pub async fn get_address_info(_x: String) -> Result<AddrInfo> {
     let ip = browserinfocm::get_ip_address_string(&headers);
+
+    // Record the IP in the current tracing span.
+    tracing::Span::current().record("ip", &ip);
+    tracing::info!("Processing address info request");
+
     let host = if ip.is_empty() {
         "".to_string()
     } else {
@@ -23,18 +32,23 @@ pub async fn get_address_info(_x: String) -> Result<AddrInfo> {
     Ok(AddrInfo { ip, host })
 }
 
-/// invoke host command
+/// Internal helper to perform a reverse DNS lookup for a given IP.
+///
+/// Uses `hickory-resolver` to perform an asynchronous PTR record lookup.
 #[cfg(feature = "server")]
+#[tracing::instrument]
 async fn command_host(ip: &str) -> Result<String> {
     use hickory_resolver::proto::rr::RData;
 
-    // 1. Check if it is correct as an IP address
+    // Validate if the input is a correct IP address.
     let ip_addr: std::net::IpAddr = ip.parse()?;
 
-    // 2. Create a resolver using system default settings
+    // Create a resolver using system default settings.
     let resolver = hickory_resolver::Resolver::builder_tokio()?.build()?;
 
-    // 3. Perform a reverse DNS lookup
+    tracing::debug!(target: "dns_lookup", ip = %ip, "Starting reverse DNS lookup");
+
+    // Perform the reverse DNS lookup.
     match resolver.reverse_lookup(ip_addr).await {
         Ok(lookup) => {
             let host = lookup
@@ -48,6 +62,9 @@ async fn command_host(ip: &str) -> Result<String> {
                 .unwrap_or_default();
             Ok(host)
         }
-        Err(_) => Ok(String::new()),
+        Err(e) => {
+            tracing::warn!(error = %e, "DNS lookup failed, proceeding with empty host");
+            Ok(String::new())
+        }
     }
 }

@@ -42,6 +42,7 @@ hickory-resolver = { version = "0.26", optional = true }
 # depend on dioxus
 reqwest = { version = "0.12", default-features = false, features = ["json"], optional = true }
 #tokio = { version = "1.52", features = ["net"], optional = true }
+tracing = { version = "0.1", optional = true }
 
 [target.'cfg(target_os = "android")'.dependencies]
 openssl = { version = "0.10", features = ["vendored"] }
@@ -56,7 +57,7 @@ default = []
 web = ["dioxus/web", "browserinfocm/web"]
 desktop = ["dioxus/desktop", "browserinfocm/desktop", "dep:dioxus-desktop"]
 mobile = ["dioxus/mobile", "browserinfocm/mobile"]
-server = ["dioxus/server", "browserinfocm/server", "dep:async-process", "dep:hickory-resolver"]
+server = ["dioxus/server", "browserinfocm/server", "dep:async-process", "dep:hickory-resolver", "dep:tracing"]
 
 backend_next = ["browserinfocm/backend_next", "dep:reqwest"]
 backend_delay = ["browserinfocm/backend_delay"]

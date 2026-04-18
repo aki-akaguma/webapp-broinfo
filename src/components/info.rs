@@ -5,46 +5,61 @@ use dioxus::prelude::*;
 
 const INFO_CSS: Asset = asset!("/assets/styling/info.css");
 
-/// the component of browser information
+use crate::backends::AddrInfo;
+
+/// Main component that displays comprehensive browser and hardware information.
+///
+/// It coordinates data fetching from the backend (IP/Host) and gathers
+/// client-side metrics using the `BrowserInfoCm` component.
 #[component]
 pub fn Info() -> Element {
-    use crate::backends::AddrInfo;
+    // Signal to trigger retries for network data fetching.
+    let mut retry_count_sig = use_signal(|| 0);
+    // Consolidated state for network information.
+    let mut addr_state_sig = use_signal(|| AddressState::Loading);
 
-    // host info
-    let mut addrinfo_sig = use_signal(|| None::<AddrInfo>);
-    let mut error_msg = use_signal(String::new);
     use_future(move || async move {
+        // Dependencies: re-runs when retry_count_sig changes.
+        let _ = retry_count_sig.read();
+        addr_state_sig.set(AddressState::Loading);
+
         match crate::backends::get_address_info("x".to_string()).await {
-            Ok(s) => addrinfo_sig.set(Some(s)),
+            Ok(info) => addr_state_sig.set(AddressState::Success(info)),
             Err(e) => {
                 tracing::error!("Failed to get address info: {e}");
-                error_msg.set(format!("Error: {e}"));
+                addr_state_sig.set(AddressState::Error(format!("Error: {e}")));
             }
         }
     });
 
-    let addrinfo_content = match &*addrinfo_sig.read() {
-        Some(a) => rsx! {
-            table {
-                tr {
-                    th { "IP" }
-                    td { class: "row1", "{a.ip}" }
-                }
-                tr {
-                    th { "Host" }
-                    td { class: "row2", "{a.host}" }
+    // Determine the UI content for the IP Information section based on fetch state.
+    let addrinfo_content = match &*addr_state_sig.read() {
+        AddressState::Loading => rsx! {
+            div { class: "loading-box", "Loading address information..." }
+        },
+        AddressState::Error(err_msg) => {
+            let (title, desc) = friendly_error(err_msg);
+            rsx! {
+                div { class: "error-card",
+                    h4 { "{title}" }
+                    p { "{desc}" }
+                    details {
+                        summary { "Detailed error information (for developers)" }
+                        pre { "{err_msg}" }
+                    }
+                    button { onclick: move |_| retry_count_sig += 1, "Try Again" }
                 }
             }
-        },
-        None if !error_msg.read().is_empty() => rsx! {
-            p { class: "error", "{error_msg}" }
-        },
-        None => rsx! {
-            p { "Loading address information..." }
+        }
+        AddressState::Success(a) => rsx! {
+            table {
+                InfoRow { label: "IP", value: a.ip.clone(), is_alt: false }
+                InfoRow { label: "Host", value: a.host.clone(), is_alt: true }
+            }
         },
     };
 
-    // browser info
+    // Signals for storing data gathered by BrowserInfoCm.
     let broinfo_sig = use_signal(BroInfo::default);
     let browser_sig = use_signal(Browser::default);
     let bicmid_sig = use_signal(String::new);
@@ -52,6 +67,7 @@ pub fn Info() -> Element {
 
     let bicmid_s = bicmid_sig.read().clone();
 
+    // Format basic browser and OS information.
     let brg = browser_sig.read().clone();
     let browser_s = format_name_version(&brg.name, &brg.version);
     let os_s = format_os(brg.os.clone());
@@ -62,46 +78,12 @@ pub fn Info() -> Element {
         String::new()
     };
 
-    let bim = broinfo_sig.read().clone();
-    let ua = bim.basic.user_agent;
-    let lang = bim.jsinfo.user_language;
-    let timezone = bim.jsinfo.timezone;
-    let has_cookie = bim.jsinfo.cookie_enabled;
-    let has_local_storage = bim.jsinfo.has_local_storage;
-    let has_session_storage = bim.jsinfo.has_session_storage;
-    let is_dark_mode = bim.jsinfo.is_dark_mode;
-
-    let cores = if let Some(n) = bim.jsinfo.cpu_cores {
-        format!("{n}")
-    } else {
-        String::new()
-    };
-    let screen_size = if let Some(w) = bim.jsinfo.screen_width {
-        if let Some(h) = bim.jsinfo.screen_height {
-            format!("{} x {} px", w, h)
-        } else {
-            String::new()
-        }
-    } else {
-        String::new()
-    };
-    let dpr = if let Some(d) = bim.jsinfo.device_pixel_ratio {
-        format!("{d:.2}")
-    } else {
-        String::new()
-    };
-    let color_depth = if let Some(n) = bim.jsinfo.screen_color_depth {
-        format!("{n}")
-    } else {
-        String::new()
-    };
-    let device_memory = if let Some(n) = bim.jsinfo.device_memory {
-        format!("{n} GB")
-    } else {
-        String::new()
-    };
+    // Consolidate raw data into display-friendly structures.
+    let hw = HardwareDisplayInfo::from_broinfo(&broinfo_sig.read());
+    let bro = BrowserDisplayInfo::from_broinfo(&broinfo_sig.read());
 
     rsx! {
+        // Background component for gathering browser info via JS interop.
         BrowserInfoCm {
             broinfo: broinfo_sig,
             browser: browser_sig,
@@ -119,40 +101,48 @@ pub fn Info() -> Element {
             h3 { "Browser Information" }
             table {
                 InfoRow { label: "Browser", value: browser_s, is_alt: false }
-                InfoRow { label: "Language", value: lang, is_alt: true }
+                InfoRow { label: "Language", value: bro.lang, is_alt: true }
                 InfoRow {
                     label: "Cookie",
-                    value: if has_cookie { "Enable" } else { "Disable" },
+                    value: if bro.has_cookie { "Enable" } else { "Disable" },
                     is_alt: false,
                 }
                 InfoRow {
                     label: "Session Storage",
-                    value: if has_session_storage { "Enable" } else { "Disable" },
+                    value: if bro.has_session_storage { "Enable" } else { "Disable" },
                     is_alt: true,
                 }
                 InfoRow {
                     label: "Local Storage",
-                    value: if has_local_storage { "Enable" } else { "Disable" },
+                    value: if bro.has_local_storage { "Enable" } else { "Disable" },
                     is_alt: false,
                 }
                 InfoRow {
                     label: "Dark Mode",
-                    value: if is_dark_mode { "Enable" } else { "Disable" },
+                    value: if bro.is_dark_mode { "Enable" } else { "Disable" },
                     is_alt: true,
                 }
-                InfoRow { label: "Timezone", value: timezone, is_alt: false }
-                InfoRow { label: "User Agent", value: ua, is_alt: true }
+                InfoRow { label: "Timezone", value: bro.timezone, is_alt: false }
+                InfoRow { label: "User Agent", value: bro.ua, is_alt: true }
             }
         }
         br {}
         div { class: "info",
             h3 { "Hardware Information" }
             table {
-                InfoRow { label: "CPU Cores", value: cores, is_alt: true }
-                InfoRow { label: "Screen Size", value: screen_size, is_alt: false }
-                InfoRow { label: "DPR", value: dpr, is_alt: true }
-                InfoRow { label: "Color Depth", value: color_depth, is_alt: false }
-                InfoRow { label: "Memory", value: device_memory, is_alt: true }
+                InfoRow { label: "CPU Cores", value: hw.cores, is_alt: true }
+                InfoRow {
+                    label: "Screen Size",
+                    value: hw.screen_size,
+                    is_alt: false,
+                }
+                InfoRow { label: "DPR", value: hw.dpr, is_alt: true }
+                InfoRow {
+                    label: "Color Depth",
+                    value: hw.color_depth,
+                    is_alt: false,
+                }
+                InfoRow { label: "Memory", value: hw.memory, is_alt: true }
             }
         }
         br {}
@@ -173,6 +163,7 @@ pub fn Info() -> Element {
     }
 }
 
+/// A helper component that renders a single labeled row in a table.
 #[component]
 fn InfoRow(label: String, value: String, is_alt: bool) -> Element {
     let class = if is_alt { "row2" } else { "row1" };
@@ -184,15 +175,109 @@ fn InfoRow(label: String, value: String, is_alt: bool) -> Element {
     }
 }
 
+/// Represents the state of the backend address information fetch.
+#[derive(Clone, PartialEq)]
+enum AddressState {
+    /// Request is in progress.
+    Loading,
+    /// Request succeeded with data.
+    Success(AddrInfo),
+    /// Request failed with an error message.
+    Error(String),
+}
+
+/// Formatted browser-related information for display.
+struct BrowserDisplayInfo {
+    ua: String,
+    lang: String,
+    timezone: String,
+    has_cookie: bool,
+    has_local_storage: bool,
+    has_session_storage: bool,
+    is_dark_mode: bool,
+}
+
+impl BrowserDisplayInfo {
+    /// Extracts and formats browser info from raw `BroInfo`.
+    fn from_broinfo(bim: &BroInfo) -> Self {
+        Self {
+            ua: bim.basic.user_agent.to_string(),
+            lang: bim.jsinfo.user_language.to_string(),
+            timezone: bim.jsinfo.timezone.to_string(),
+            has_cookie: bim.jsinfo.cookie_enabled,
+            has_local_storage: bim.jsinfo.has_local_storage,
+            has_session_storage: bim.jsinfo.has_session_storage,
+            is_dark_mode: bim.jsinfo.is_dark_mode,
+        }
+    }
+}
+
+/// Formatted hardware-related information for display.
+struct HardwareDisplayInfo {
+    cores: String,
+    screen_size: String,
+    dpr: String,
+    color_depth: String,
+    memory: String,
+}
+
+impl HardwareDisplayInfo {
+    /// Extracts and formats hardware metrics from raw `BroInfo`.
+    fn from_broinfo(bim: &BroInfo) -> Self {
+        let js = &bim.jsinfo;
+        Self {
+            cores: js.cpu_cores.map(|n| n.to_string()).unwrap_or_default(),
+            screen_size: match (js.screen_width, js.screen_height) {
+                (Some(w), Some(h)) => format!("{} x {} px", w, h),
+                _ => String::new(),
+            },
+            dpr: js
+                .device_pixel_ratio
+                .map(|d| format!("{d:.2}"))
+                .unwrap_or_default(),
+            color_depth: js
+                .screen_color_depth
+                .map(|n| n.to_string())
+                .unwrap_or_default(),
+            memory: js
+                .device_memory
+                .map(|n| format!("{n} GB"))
+                .unwrap_or_default(),
+        }
+    }
+}
+
+/// Helper to format OS name and version.
 fn format_os(os: Option<browserinfocm::browserinfo::Os>) -> String {
     os.map(|o| format_name_version(&o.name, &o.version))
         .unwrap_or_default()
 }
 
+/// Combines name and version into a single string (e.g., "Chrome 120").
 fn format_name_version(name: &str, version: &str) -> String {
     match (name.is_empty(), version.is_empty()) {
         (false, false) => format!("{} {}", name, version),
         (false, true) => name.to_string(),
         _ => String::new(),
+    }
+}
+
+/// Translates raw error messages into user-friendly titles and descriptions.
+fn friendly_error(raw_error: &str) -> (&str, &str) {
+    if raw_error.contains("timeout") {
+        (
+            "Connection Timeout",
+            "Please check your network status and try again.",
+        )
+    } else if raw_error.contains("refused") || raw_error.contains("404") {
+        (
+            "Unable to connect to server",
+            "The server may be undergoing maintenance or is temporarily unavailable.",
+        )
+    } else {
+        (
+            "An error has occurred",
+            "An unexpected error occurred. Please try again later.",
+        )
     }
 }

@@ -1,7 +1,10 @@
 use crate::components::Info;
 use dioxus::prelude::*;
 
-/// the component of the `home page`
+/// The Home view component.
+///
+/// It acts as the primary page, rendering the `Info` component
+/// and displaying the current application version.
 #[component]
 pub fn Home() -> Element {
     let pkg_version = env!("CARGO_PKG_VERSION");

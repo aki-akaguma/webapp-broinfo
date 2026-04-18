@@ -12,6 +12,9 @@ list:
 clean:
 	cargo clean
 
+check:
+	cargo check --features web
+
 apply-patch:
 	cargo patch-crate
 

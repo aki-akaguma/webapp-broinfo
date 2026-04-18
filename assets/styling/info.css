@@ -25,4 +25,24 @@
     color: #5a5a5a;
     padding: 0px 10px;
 }
+
+.error-card {
+    background-color: #fff5f5;
+    border-left: 4px solid #f56565;
+    padding: 1rem;
+    margin: 1rem 0;
+    border-radius: 4px;
+}
+.error-card h4 { color: #c53030; margin-top: 0; }
+.error-card button {
+    background-color: #f56565;
+    color: white;
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-top: 1rem;
+}
+.error-card button:hover { background-color: #e53e3e; }
+
 /* vim: set ts=4 sw=4 sts=0 expandtab: ### mode line for vim */
