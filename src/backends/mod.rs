@@ -22,7 +22,7 @@ pub async fn get_address_info(_x: String) -> Result<AddrInfo> {
 
     // Record the IP in the current tracing span.
     tracing::Span::current().record("ip", &ip);
-    tracing::info!("Processing address info request");
+    //tracing::info!("Processing address info request");
 
     let host = if ip.is_empty() {
         "".to_string()
