@@ -29,17 +29,16 @@ dioxus-desktop = { version = "0.7.5", optional = true }
 #browserinfocm = { git = "https://github.com/aki-akaguma/browserinfocm.git" }
 browserinfocm = "0.2.0"
 
-anyhow = "1.0"
-console_error_panic_hook = "0.1"
-
 async-process = { version = "2.5", optional = true }
+console_error_panic_hook = { version = "0.1", optional = true }
 const-css-minify = { version="1.0", optional = true }
 hickory-resolver = { version = "0.26", optional = true }
 
-# depend on dioxus
+# what dioxus depends on
+anyhow = { version = "1.0" }
 serde = { version = "1.0", features = ["derive"] }
 
-# depend on dioxus, optional
+# what dioxus depends on, optional
 reqwest = { version = "0.12", default-features = false, features = ["json"], optional = true }
 tracing = { version = "0.1", optional = true }
 
@@ -53,7 +52,7 @@ rust-version-info-file = "0.2"
 [features]
 default = []
 
-web = ["dioxus/web", "browserinfocm/web"]
+web = ["dioxus/web", "browserinfocm/web", "dep:console_error_panic_hook"]
 desktop = ["dioxus/desktop", "browserinfocm/desktop", "dep:dioxus-desktop"]
 mobile = ["dioxus/mobile", "browserinfocm/mobile"]
 server = ["dioxus/server", "browserinfocm/server",
