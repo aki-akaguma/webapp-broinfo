@@ -27,7 +27,7 @@ dioxus-desktop = { version = "0.7.5", optional = true }
 
 #browserinfocm = { path = "../browserinfocm", default-features = false }
 #browserinfocm = { git = "https://github.com/aki-akaguma/browserinfocm.git" }
-browserinfocm = "0.1.17"
+browserinfocm = "0.2.0"
 
 anyhow = "1.0"
 console_error_panic_hook = "0.1"

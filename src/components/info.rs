@@ -1,5 +1,6 @@
-use browserinfocm::browserinfo::{BroInfo, Browser};
+use browserinfocm::browserinfo::BroInfo;
 use browserinfocm::BrowserInfoCm;
+use browserinfocm::BrowserInfoState;
 use dioxus::logger::tracing;
 use dioxus::prelude::*;
 
@@ -60,15 +61,13 @@ pub fn Info() -> Element {
     };
 
     // Signals for storing data gathered by BrowserInfoCm.
-    let broinfo_sig = use_signal(BroInfo::default);
-    let browser_sig = use_signal(Browser::default);
-    let bicmid_sig = use_signal(String::new);
-    let user_sig = use_signal(String::new);
+    let state_sig = use_signal(BrowserInfoState::default);
 
-    let bicmid_s = bicmid_sig.read().clone();
+    // Format bicmid
+    let bicmid_s = &state_sig.read().bicmid;
 
     // Format basic browser and OS information.
-    let brg = browser_sig.read().clone();
+    let brg = &state_sig.read().browser;
     let browser_s = format_name_version(&brg.name, &brg.version);
     let os_s = format_os(brg.os.clone());
 
@@ -79,17 +78,12 @@ pub fn Info() -> Element {
     };
 
     // Consolidate raw data into display-friendly structures.
-    let hw = HardwareDisplayInfo::from_broinfo(&broinfo_sig.read());
-    let bro = BrowserDisplayInfo::from_broinfo(&broinfo_sig.read());
+    let hw = HardwareDisplayInfo::from_broinfo(&state_sig.read().broinfo);
+    let bro = BrowserDisplayInfo::from_broinfo(&state_sig.read().broinfo);
 
     rsx! {
         // Background component for gathering browser info via JS interop.
-        BrowserInfoCm {
-            broinfo: broinfo_sig,
-            browser: browser_sig,
-            bicmid: bicmid_sig,
-            user: user_sig,
-        }
+        BrowserInfoCm { state: state_sig }
         document::Link { rel: "stylesheet", href: INFO_CSS }
 
         div { class: "info",
