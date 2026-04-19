@@ -208,11 +208,11 @@ impl BrowserDisplayInfo {
 
 /// Formatted hardware-related information for display.
 struct HardwareDisplayInfo {
-    cores: String,
-    screen_size: String,
-    dpr: String,
-    color_depth: String,
-    memory: String,
+    cores: HardwareValue,
+    screen_size: HardwareValue,
+    dpr: HardwareValue,
+    color_depth: HardwareValue,
+    memory: HardwareValue,
 }
 
 impl HardwareDisplayInfo {
@@ -220,23 +220,43 @@ impl HardwareDisplayInfo {
     fn from_broinfo(bim: &BroInfo) -> Self {
         let js = &bim.jsinfo;
         Self {
-            cores: js.cpu_cores.map(|n| n.to_string()).unwrap_or_default(),
+            cores: HardwareValue::Cores(js.cpu_cores.unwrap_or_default()),
             screen_size: match (js.screen_width, js.screen_height) {
-                (Some(w), Some(h)) => format!("{} x {} px", w, h),
-                _ => String::new(),
+                (Some(width), Some(height)) => HardwareValue::Pixels { width, height },
+                _ => HardwareValue::None,
             },
-            dpr: js
-                .device_pixel_ratio
-                .map(|d| format!("{d:.2}"))
-                .unwrap_or_default(),
-            color_depth: js
-                .screen_color_depth
-                .map(|n| n.to_string())
-                .unwrap_or_default(),
-            memory: js
-                .device_memory
-                .map(|n| format!("{n} GB"))
-                .unwrap_or_default(),
+            dpr: HardwareValue::Dpr(js.device_pixel_ratio.unwrap_or_default()),
+            color_depth: HardwareValue::Bits(js.screen_color_depth.unwrap_or_default()),
+            memory: HardwareValue::MemoryGB(js.device_memory.unwrap_or_default()),
+        }
+    }
+}
+
+/// Representing hardware numbers with units
+enum HardwareValue {
+    Cores(i32),
+    Pixels { width: i32, height: i32 },
+    Dpr(f64),
+    Bits(i32),
+    MemoryGB(i32),
+    None,
+}
+
+impl std::fmt::Display for HardwareValue {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        match self {
+            Self::Cores(n) => write!(f, "{n}"),
+            Self::Pixels { width, height } => write!(f, "{width} x {height} px"),
+            Self::Dpr(d) => write!(f, "{d:.2}"),
+            Self::Bits(n) => write!(f, "{n} bits"),
+            Self::MemoryGB(n) => {
+                if *n > 0 {
+                    write!(f, "{n} GB")
+                } else {
+                    write!(f, "")
+                }
+            }
+            Self::None => write!(f, "-"),
         }
     }
 }
