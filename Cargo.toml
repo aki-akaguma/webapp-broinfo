@@ -19,20 +19,12 @@ repository = "https://github.com/aki-akaguma/webapp-broinfo"
 crates = ["dioxus-fullstack"]
 
 [patch.crates-io]
-dioxus-fullstack = { path = "./patched/dioxus-fullstack-0.7.5" }
+dioxus-fullstack = { path = "./patched/dioxus-fullstack-0.7.6" }
 
 [dependencies]
-dioxus = { version = "0.7.5", features = ["fullstack"] }
-dioxus-desktop = { version = "0.7.5", optional = true }
-
-#browserinfocm = { path = "../browserinfocm", default-features = false }
-#browserinfocm = { git = "https://github.com/aki-akaguma/browserinfocm.git" }
-browserinfocm = "0.2.0"
-
-async-process = { version = "2.5", optional = true }
-console_error_panic_hook = { version = "0.1", optional = true }
-const-css-minify = { version="1.0", optional = true }
-hickory-resolver = { version = "0.26", optional = true }
+# dioxus family
+dioxus = { version = "0.7.6", features = ["fullstack"] }
+dioxus-desktop = { version = "0.7.6", optional = true }
 
 # what dioxus depends on
 anyhow = { version = "1.0" }
@@ -41,6 +33,16 @@ serde = { version = "1.0", features = ["derive"] }
 # what dioxus depends on, optional
 reqwest = { version = "0.12", default-features = false, features = ["json"], optional = true }
 tracing = { version = "0.1", optional = true }
+
+# other, optional
+async-process = { version = "2.5", optional = true }
+console_error_panic_hook = { version = "0.1", optional = true }
+const-css-minify = { version="1.0", optional = true }
+hickory-resolver = { version = "0.26", optional = true }
+
+#browserinfocm = { path = "../browserinfocm", default-features = false }
+#browserinfocm = { git = "https://github.com/aki-akaguma/browserinfocm.git" }
+browserinfocm = "0.2.0"
 
 [target.'cfg(target_os = "android")'.dependencies]
 openssl = { version = "0.10", features = ["vendored"] }
