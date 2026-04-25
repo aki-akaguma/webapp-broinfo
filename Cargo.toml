@@ -1,6 +1,6 @@
 [package]
 name = "broinfo"
-version = "0.1.14"
+version = "0.1.15"
 authors = ["aki <aki.akaguma@hotmail.com>"]
 edition = "2021"
 description = """
@@ -40,9 +40,10 @@ console_error_panic_hook = { version = "0.1", optional = true }
 const-css-minify = { version="1.0", optional = true }
 hickory-resolver = { version = "0.26", optional = true }
 
+# other
 #browserinfocm = { path = "../browserinfocm", default-features = false }
 #browserinfocm = { git = "https://github.com/aki-akaguma/browserinfocm.git" }
-browserinfocm = "0.2.0"
+browserinfocm = "0.2.1"
 
 [target.'cfg(target_os = "android")'.dependencies]
 openssl = { version = "0.10", features = ["vendored"] }

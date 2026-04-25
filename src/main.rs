@@ -33,6 +33,9 @@ fn main() {
         dioxus_fullstack::set_server_url(backend_url);
     }
 
+    #[cfg(feature = "server")]
+    browserinfocm::backend_init().expect("failed to init backend");
+
     // Launch configuration for Desktop apps (release mode).
     #[cfg(all(not(debug_assertions), feature = "desktop"))]
     dioxus::LaunchBuilder::new()
