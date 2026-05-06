@@ -2,7 +2,7 @@
 name = "broinfo"
 version = "0.1.15"
 authors = ["aki <aki.akaguma@hotmail.com>"]
-edition = "2021"
+edition = "2024"
 description = """
 This is a webapp that provides browser information and hardware information.
 """
