@@ -6,9 +6,11 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+
+
+## [0.1.16] (2026-05-06)
 ### Changed
 * update crate: dioxus(0.7.7), browserinfocm(0.2.2)
-
 
 ## [0.1.15] (2026-04-25)
 ### Changed
@@ -136,7 +138,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 * first commit
 
-[Unreleased]: https://github.com/aki-akaguma/webapp-broinfo/compare/v0.1.15..HEAD
+[Unreleased]: https://github.com/aki-akaguma/webapp-broinfo/compare/v0.1.16..HEAD
+[0.1.16]: https://github.com/aki-akaguma/webapp-broinfo/compare/v0.1.15..v0.1.16
 [0.1.15]: https://github.com/aki-akaguma/webapp-broinfo/compare/v0.1.14..v0.1.15
 [0.1.14]: https://github.com/aki-akaguma/webapp-broinfo/compare/v0.1.13..v0.1.14
 [0.1.13]: https://github.com/aki-akaguma/webapp-broinfo/compare/v0.1.12..v0.1.13
